@@ -1,6 +1,3 @@
-// Followed this guide -- https://www.twilio.com/blog/react-app-with-node-js-server-proxy
-// https://github.com/philnash/react-express-starter/tree/twilio
-
 const express = require('express');
 const sessions = require('express-session');
 const bodyParser = require('body-parser');
@@ -9,8 +6,8 @@ require('dotenv').config(); // The app is reading from the .env with this commen
 /* For better Logging and Debugging */
 const pino = require('express-pino-logger')();
 
-//global.debug = require('debug');
-//global.errLog = debug('twilio:error');
+// global.debug = require('debug');
+// global.errLog = debug('twilio:error');
 const debug = require('debug');
 const log = debug('twilio');
 const errLog = debug('twilio:error');
@@ -19,7 +16,7 @@ const errLog = debug('twilio:error');
 // const expressWinston = require('express-winston');
 
 const app = express();
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 6666;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -35,30 +32,31 @@ app.use(pino);
 // 	}
 // }
 
+
 /**
  * For Development Only, create a secure tunnel to the local machine for Twilio
  */
-const ngrokUrl = async () => {
-	if (process.env.NODE_ENV === 'development') {
-		try {
-			const nodemon = require('nodemon');
-			const url = await require('ngrok').connect(port);
-			log(`ngrok url -> ${url}`);
+// const ngrokUrl = async function() {
+// 	if (process.env.NODE_ENV === 'development') {
+// 		try {
+// 			const nodemon = require('nodemon');
+// 			const url = await require('ngrok').connect(port);
+// 			log(`ngrok url -> ${url}`);
 
-			nodemon(`-x 'NGROK_URL=${url} node' ./index.js`);
+// 			nodemon(`-x 'NGROK_URL=${url} node' ./server/index.js`);
 
-			nodemon.on('start', () => log('App has started'))
-				.on('quit', () => log('App has quit'))
-				.on('restart', files => log('App restarted due to: ', files));
+// 			nodemon.on('start', () => log('App has started'))
+// 				.on('quit', () => log('App has quit'))
+// 				.on('restart', files => log('App restarted due to: ', files));
 
-			// if (process.env.TWILIO_APP_SID) {
-			// 	//require('./helpers/setup-helper').updateApplicationSid(process.env.TWILIO_APP_SID, url);
-			// }
-		} catch (error) {
-			errLog(`ngrok error -> ${error}`);
-		}
-	}
-};
+// 			// if (process.env.TWILIO_APP_SID) {
+// 			// 	//require('./helpers/setup-helper').updateApplicationSid(process.env.TWILIO_APP_SID, url);
+// 			// }
+// 		} catch (error) {
+// 			errLog(`ngrok error -> ${error}`);
+// 		}
+// 	}
+// };
 
 /* Setup Twilio session key for client to access it's session data */
 app.use(sessions({
@@ -157,5 +155,7 @@ app.use('/workers', workersRouter);
 
 app.listen(port, () => {
 	log(`Server running on http://localhost:${port}`);
-	ngrokUrl();
+	if (process.env.NGROK_URL) {
+		log(`Ngrok tunnel -> ${process.env.NGROK_URL}`);
+	}
 });
