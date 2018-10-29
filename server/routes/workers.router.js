@@ -8,8 +8,8 @@ const log = debug('twilio:workers');
 const errLog = debug('twilio:error');
 
 const Twilio = require('twilio');
-const client = new Twilio(process.env.REACT_APP_TWILIO_ACCOUNT_SID, process.env.REACT_APP_TWILIO_AUTH_TOKEN);
-const workers = client.taskrouter.workspaces(process.env.REACT_APP_TWILIO_WORKSPACE_SID).workers;
+const client = new Twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+const workers = client.taskrouter.workspaces(process.env.TWILIO_WORKSPACE_SID).workers;
 
 /**		~~  /workers/available  ~~
  * Get a list of available workers (SID and friendlyName) excludes current worker

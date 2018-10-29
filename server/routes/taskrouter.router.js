@@ -9,10 +9,10 @@ const errLog = debug('twilio:error');
 
 
 const Twilio = require('twilio');
-const client = new Twilio(process.env.REACT_APP_TWILIO_ACCOUNT_SID, process.env.REACT_APP_TWILIO_AUTH_TOKEN);
+const client = new Twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
 //@TODO this shouldn't need to be accessed in React anymore so the preface can be removed from .env and updated here.
-const workspaces = client.taskrouter.workspaces(process.env.REACT_APP_TWILIO_WORKSPACE_SID);
+const workspaces = client.taskrouter.workspaces(process.env.TWILIO_WORKSPACE_SID);
 
 /**		~~  /taskrouter/activities  ~~
  * Get a list of activities for the workspace

@@ -1,6 +1,6 @@
 const Twilio = require('twilio');
 const TaskRouterCapability = Twilio.jwt.taskrouter.TaskRouterCapability;
-//const client = new Twilio(process.env.REACT_APP_TWILIO_ACCOUNT_SID, process.env.REACT_APP_TWILIO_AUTH_TOKEN);
+//const client = new Twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
 const lifetime = 3600;
 
@@ -13,7 +13,7 @@ const lifetime = 3600;
 const buildWorkspacePolicy = options => {
 	options = options || {}
 	const resources = options.resources || [];
-	const urlComponents = ['https://taskrouter.twilio.com', 'v1', 'Workspaces', process.env.REACT_APP_TWILIO_WORKSPACE_SID];
+	const urlComponents = ['https://taskrouter.twilio.com', 'v1', 'Workspaces', process.env.TWILIO_WORKSPACE_SID];
 
 	return new TaskRouterCapability.Policy({
 		url: urlComponents.concat(resources).join('/'),
@@ -29,13 +29,13 @@ const buildWorkspacePolicy = options => {
  */
 module.exports.createWorkerTaskrouterCapabilityToken = workerSid => {
 	const workerCapability = new TaskRouterCapability({
-		accountSid: process.env.REACT_APP_TWILIO_ACCOUNT_SID,
-		authToken: process.env.REACT_APP_TWILIO_AUTH_TOKEN,
-		workspaceSid: process.env.REACT_APP_TWILIO_WORKSPACE_SID,
+		accountSid: process.env.TWILIO_ACCOUNT_SID,
+		authToken: process.env.TWILIO_AUTH_TOKEN,
+		workspaceSid: process.env.TWILIO_WORKSPACE_SID,
 		channelId: workerSid,
 		ttl: lifetime,
 	});
-	const eventBridgePolicies = Twilio.jwt.taskrouter.util.defaultEventBridgePolicies(process.env.REACT_APP_TWILIO_ACCOUNT_SID, workerSid);
+	const eventBridgePolicies = Twilio.jwt.taskrouter.util.defaultEventBridgePolicies(process.env.TWILIO_ACCOUNT_SID, workerSid);
 	const workspacePolicies = [
 		buildWorkspacePolicy(), // Workspace fetch Policy
 		buildWorkspacePolicy({resources: ['**']}), // Workspace sub-resources fetch Policy

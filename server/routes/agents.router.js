@@ -8,10 +8,10 @@ const log = debug('twilio:agents');
 const errLog = debug('twilio:error');
 
 const Twilio = require('twilio');
-const client = new Twilio(process.env.REACT_APP_TWILIO_ACCOUNT_SID, process.env.REACT_APP_TWILIO_AUTH_TOKEN);
+const client = new Twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 const AccessToken = Twilio.jwt.AccessToken;
 // TODO: this shouldn't need to be accessed in React anymore so the preface can be removed from .env and updated here.
-const workspaces = client.taskrouter.workspaces(process.env.REACT_APP_TWILIO_WORKSPACE_SID);
+const workspaces = client.taskrouter.workspaces(process.env.TWILIO_WORKSPACE_SID);
 
 /* TTL for all tokens */
 const lifetime = 3600; // TODO: should the ttl be increased?
@@ -31,8 +31,8 @@ const createWorkerTokens = (applicationSid, worker) => {
 	const clientName = worker.friendlyName.toLowerCase();
 
 	const phoneCapability = new ClientCapability({
-		accountSid: process.env.REACT_APP_TWILIO_ACCOUNT_SID,
-		authToken: process.env.REACT_APP_TWILIO_AUTH_TOKEN,
+		accountSid: process.env.TWILIO_ACCOUNT_SID,
+		authToken: process.env.TWILIO_AUTH_TOKEN,
 		ttl: lifetime
 	});
 
@@ -44,9 +44,9 @@ const createWorkerTokens = (applicationSid, worker) => {
 		}));
 
 	const accessToken = new AccessToken(
-		process.env.REACT_APP_TWILIO_ACCOUNT_SID,
-		process.env.REACT_APP_TWILIO_API_KEY_SID,
-		process.env.REACT_APP_TWILIO_API_KEY_SECRET,
+		process.env.TWILIO_ACCOUNT_SID,
+		process.env.TWILIO_API_KEY_SID,
+		process.env.TWILIO_API_KEY_SECRET,
 		{ttl: lifetime},
 	);
 	accessToken.identity = worker.friendlyName;
