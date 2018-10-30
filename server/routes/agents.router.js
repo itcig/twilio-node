@@ -77,7 +77,7 @@ router.post('/login', async (req, res) => {
 					attributes: worker.attributes
 				};
 
-				res.status(200).end();
+				res.status(200).send(req.session.worker);
 				return; // TODO: is this needed?
 			}
 		}

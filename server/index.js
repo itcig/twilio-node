@@ -16,7 +16,7 @@ const errLog = debug('twilio:error');
 // const expressWinston = require('express-winston');
 
 const app = express();
-const port = process.env.PORT || 6666;
+const port = process.env.PORT || 3666;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -88,7 +88,7 @@ app.use((req, res, next) => {
 	next();
 });
 
-/* Set request properties */
+/* Set request and response properties */
 app.use((req, res, next) => {
 	const config = {
 		twilio: {
@@ -97,14 +97,19 @@ app.use((req, res, next) => {
 	};
 
 	req.config = config;
+
+
 	next();
 });
 
-/* Set Request props */
+/* Set Request and Response props */
 app.use('/', (req, res, next) => {
 	res.set({
-			'Content-Type': 'application/json',
-			'Cache-Control': 'public, max-age=0',
+		'Content-Type': 'application/json',
+		'Cache-Control': 'public, max-age=0',
+		/* fix CORS issue */
+		'Access-Control-Allow-Origin': '*',
+		'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
 	});
 	next();
 });
@@ -139,6 +144,11 @@ app.use('/taskrouter', taskrouterRouter);
 
 const workersRouter = require('./routes/workers.router.js');
 app.use('/workers', workersRouter);
+
+
+const chatRouter = require('./routes/chat.router.js');
+app.use('/chat', chatRouter);
+
 
 /* Error Logging - must come after routes */
 // app.use(expressWinston.errorLogger({
